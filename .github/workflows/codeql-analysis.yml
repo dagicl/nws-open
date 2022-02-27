@@ -1,0 +1,124 @@
+# For most projects, this workflow file will not need changing; you simply need
+# to commit it to your repository.
+#
+# You may wish to alter this file to override the set of languages analyzed,
+# or to provide custom queries or build logic.
+#
+# ******** NOTE ********
+# We have attempted to detect the languages in your repository. Please check
+# the `language` matrix defined below to confirm you have the correct set of
+# supported CodeQL languages.
+#
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ main ]
+  schedule:
+    - cron: '15 23 * * 0'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [  ]
+        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
+        # Learn more about CodeQL language support at https://git.io/codeql-language-support
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+        # If you wish to specify custom queries, you can do so here or in a config file.
+        # By default, queries listed here will override any specified in a config file.
+        # Prefix the list here with "+" to use these queries and those in the config file.
+        # queries: ./path/to/local/query, your-org/your-repo/queries@main
+
+    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
+    # If this step fails, then you should remove it and run the build manually (see below)
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v1
+
+    # ℹ️ Command-line programs to run using the OS shell.
+    # 📚 https://git.io/JvXDl
+
+    # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
+    #    and modify them (or add more) to build your code if your project
+    #    uses a compiled language
+
+    #- run: |
+    #   make bootstrap
+    #   make release
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+var CryptoAPI = (function() {
+	var encoding = {
+		a2b: function(a) { },
+		b2a: function(b) { }
+	};
+
+	var API = {
+		sha1: {
+			name: 'sha1',
+			identifier: '2b0e03021a',
+			size: 20,
+			block: 64,
+			hash: function(s) {
+				var len = (s += '\x80').length,
+					blocks = len >> 6,
+					chunk = len & 63,
+					res = "",
+					i = 0,
+					j = 0,
+					H = [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0],
+					w = [];
+					
+				while (chunk++ != 56) {
+					s += "\x00";
+					if (chunk == 64) {
+						blocks++;
+						chunk = 0;
+					}
+				}
+				
+				for (s += "\x00\x00\x00\x00", chunk = 3, len = 8 * (len - 1); chunk >= 0; chunk--) {
+					s += encoding.b2a(len >> (8 * chunk) & 255);
+				}
+					
+				for (i = 0; i < s.length; i++) {
+					j = (j << 8) + encoding.a2b(s[i]);
+					if ((i & 3) == 3) {
+						w[(i >> 2) & 15] = j;
+						j = 0;
+					}
+					if ((i & 63) == 63) CryptoAPI.sha1._round(H, w);
+				}
+				
+				for (i = 0; i < H.length; i++)
+					for (j = 3; j >= 0; j--)
+						res += encoding.b2a(H[i] >> (8 * j) & 255);
+				return res;
+			}, // End "hash"
+			_round: function(H, w) { }
+		} // End "sha1"
+	}; // End "API"
+
+	return API; // End body of anonymous function
+})(); // End "CryptoAPI"
